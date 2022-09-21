@@ -106,85 +106,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SPR Player_0
+      name: SPR Player Walk_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 16
         height: 16
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3f72dde1c206b3d419e507cadfc61c70
-      internalID: -166024405
+      spriteID: 0292e62632a6c024cba3d8fd550e15d1
+      internalID: -749803254
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SPR Player_1
+      name: SPR Player Walk_1
       rect:
         serializedVersion: 2
         x: 16
         y: 0
         width: 16
         height: 16
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2b9bf89c186f9304caf601c512271014
-      internalID: -1598958234
+      spriteID: 9ce4264038231dd4a8e5cee78f8b3e16
+      internalID: -1101819812
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SPR Player_2
+      name: SPR Player Walk_2
       rect:
         serializedVersion: 2
         x: 32
         y: 0
         width: 16
         height: 16
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0c91d4c19bddeb7469e5e639bd46712f
-      internalID: 1371475916
+      spriteID: 8705f32aecb4ed446abf135b2925bd7b
+      internalID: 202625930
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SPR Player_3
+      name: SPR Player Walk_3
       rect:
         serializedVersion: 2
         x: 48
         y: 0
         width: 16
         height: 16
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8334d044b78ee1040b7e0c3caf483896
-      internalID: 1576918641
+      spriteID: 7ff06e72122d4ce488a340650007af23
+      internalID: -1586182494
       vertices: []
       indices: 
       edges: []
@@ -200,10 +200,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SPR Player_1: -1598958234
-      SPR Player_0: -166024405
-      SPR Player_3: 1576918641
-      SPR Player_2: 1371475916
+      SPR Player Walk_2: 202625930
+      SPR Player Walk_1: -1101819812
+      SPR Player Walk_0: -749803254
+      SPR Player Walk_3: -1586182494
   spritePackingTag: 
   pSDRemoveMatte: 0
   userData: 
