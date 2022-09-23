@@ -47,10 +47,15 @@ public class LevelGenerator : MonoBehaviour
 
     [SerializeField] private Vector3 posOffset;
 
+    [SerializeField] private GameObject manualMap;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        // Get rid of the manual map. Cast away hard labour in favour of even harder labour.
+        Object.Destroy(manualMap);
+
         // Get size of corner template
         int mapHeight = levelMap.GetLength(0);
         int mapWidth = levelMap.GetLength(1);
