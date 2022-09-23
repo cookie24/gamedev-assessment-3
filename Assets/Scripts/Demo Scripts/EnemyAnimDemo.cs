@@ -5,13 +5,14 @@ using UnityEngine;
 public class EnemyAnimDemo : MonoBehaviour
 {
 
-    public float defaultRotation = 0;
-    [SerializeField] private Animator animator;
+    private Quaternion defaultRotation;
+    private Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        defaultRotation = transform.rotation;
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -19,11 +20,11 @@ public class EnemyAnimDemo : MonoBehaviour
     {
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("EnemyRegen"))
         {
-            transform.Rotate(0f, 0f, 360*Time.deltaTime);
+            transform.Rotate(0f, 0f, -360*Time.deltaTime);
         }
         else
         {
-            transform.rotation = Quaternion.Euler(0f, 0f, defaultRotation);
+            transform.rotation = defaultRotation;
         }
     }
 }
