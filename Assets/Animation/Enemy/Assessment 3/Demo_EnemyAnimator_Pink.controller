@@ -96,7 +96,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 150be397b370f9c40b70f73d2b0371f9, type: 2}
+  m_Motion: {fileID: 7400000, guid: d47513277a36bda4f963f472b7c69f21, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -186,7 +186,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: EnemyAnimator_Orange
+  m_Name: Demo_EnemyAnimator_Pink
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: MoveSpeed
@@ -274,7 +274,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 150be397b370f9c40b70f73d2b0371f9, type: 2}
+  m_Motion: {fileID: 7400000, guid: d47513277a36bda4f963f472b7c69f21, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
