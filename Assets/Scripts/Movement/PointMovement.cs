@@ -11,14 +11,10 @@ public class PointMovement : MonoBehaviour
     public float moveSpeed;
     private float moveSpeedAnim = 0;
 
-    private AudioSource audioSource;
-    [SerializeField] private AudioClip moveSound;
-
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
-        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -27,18 +23,10 @@ public class PointMovement : MonoBehaviour
         moveSpeedAnim = 0;
 
         // Move our lil object if there is a destination for him to go
-        if (pointList.Count != 0)
+        if (IsMoving())
         {
             Vector3 activePoint = pointList[0];
             moveSpeedAnim = moveSpeed;
-
-            // footstep audio checking
-            if (moveSound != null && !audioSource.isPlaying)
-            {
-                audioSource.clip = moveSound;
-                audioSource.loop = true;
-                audioSource.Play();
-            }
 
             // rotation
             float angle = Mathf.Atan2(activePoint.y - transform.position.y, activePoint.x - transform.position.x) * Mathf.Rad2Deg;
@@ -52,10 +40,6 @@ public class PointMovement : MonoBehaviour
             {
                 RemovePoint(activePoint);
             }
-        }
-        else
-        {
-            audioSource.Stop();
         }
 
         animator.SetFloat("MoveSpeed", moveSpeedAnim);
@@ -85,5 +69,10 @@ public class PointMovement : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public bool IsMoving()
+    {
+        return pointList.Count != 0;
     }
 }

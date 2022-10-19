@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 1932743913948850504}
   - component: {fileID: 1932743913948850506}
   - component: {fileID: 1932743913948850505}
+  - component: {fileID: 8502286535257097441}
   m_Layer: 0
   m_Name: Power Pellet
-  m_TagString: Untagged
+  m_TagString: Pellet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31,7 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1932743913948850506
 Animator:
@@ -105,3 +106,36 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!60 &8502286535257097441
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1932743913948850519}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1.3333334, y: 1.3333334}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.4166667, y: -0.6666667}
+      - {x: 0.33333334, y: -0.6666667}
+      - {x: 0.4166667, y: -0.5833334}
+      - {x: 0.4166667, y: 0.33333334}
+      - {x: 0.33333334, y: 0.5833334}
+      - {x: -0.16666667, y: 0.5833334}
+      - {x: -0.4166667, y: 0.5}
+  m_UseDelaunayMesh: 0
