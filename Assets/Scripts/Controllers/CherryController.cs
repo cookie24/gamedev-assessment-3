@@ -29,7 +29,7 @@ public class CherryController : MonoBehaviour
     {
 
         // spawn cherry
-        if (gameManager.gameTimer >= nextSpawnTime)
+        if (gameManager.getGameTimer() >= nextSpawnTime)
         {
             // generate new cherry data index
             int i = (int)Random.Range(0, cherrySpawnPoints.Count - 1);

@@ -4,7 +4,17 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public float gameTimer = 0f;
+    enum GameState
+    {
+        Paused,
+        Normal,
+        Scared,
+        Dead
+    }
+
+    private float gameTimer = 0f;
+    private int score;
+    private GameState gameState = GameState.Paused;
 
     // Start is called before the first frame update
     void Start()
@@ -17,4 +27,20 @@ public class GameManager : MonoBehaviour
     {
         gameTimer += Time.deltaTime;
     }
+
+    public float getGameTimer()
+    {
+        return gameTimer;
+    }
+
+    public void AddScore(int i)
+    {
+        score += i;
+    }
+
+    public int GetScore()
+    {
+        return score;
+    }
+
 }

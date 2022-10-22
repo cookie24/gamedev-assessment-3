@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class PlayerController : MonoBehaviour
 {
     private MazeMovement mazeMover;
     private PointMovement pointMover;
+    public GameManager gameManager;
 
     private AudioSource audioSource;
     [SerializeField] private AudioClip moveSoundPelletless;
@@ -17,6 +19,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject partSysStopObj;
 
     private bool stoppedThisFrame = true;
+    private Collider2D[] collArray = new Collider2D[2];
+    new private Collider2D collider;
+    ContactFilter2D collFilter = new ContactFilter2D();
 
 
     // Start is called before the first frame update
@@ -25,6 +30,7 @@ public class PlayerController : MonoBehaviour
         mazeMover = GetComponent<MazeMovement>();
         pointMover = GetComponent<PointMovement>();
         audioSource = GetComponent<AudioSource>();
+        collider = GetComponent<Collider2D>();
     }
 
     // Update is called once per frame
@@ -33,6 +39,7 @@ public class PlayerController : MonoBehaviour
         GetInput();
         PlayFootsteps();
         PlayParticles();
+        CheckCollisions();
     }
 
     void GetInput()
@@ -66,7 +73,8 @@ public class PlayerController : MonoBehaviour
             stoppedThisFrame = false;
 
             // Determine which footstep audio we should play
-            if (mazeMover.CollisionInDirection(mazeMover.currentInput, "Pellet") || mazeMover.CollisionInDirection(Dir.None, "Pellet"))
+            if (mazeMover.CollisionInDirection(mazeMover.currentInput, "Pellet", 0.8f) ||
+                mazeMover.CollisionInDirection(Dir.None, "Pellet", 0.8f) )
             {
                 currentFootstepAudio = moveSoundPellet;
             }
@@ -122,5 +130,56 @@ public class PlayerController : MonoBehaviour
                 stoppedThisFrame = true;
             }
         }
+    }
+
+    void CheckCollisions()
+    {
+        // Get collisions
+        Array.Clear(collArray, 0, collArray.Length);
+        Physics2D.OverlapCollider(collider, collFilter.NoFilter(), collArray);
+        Collider2D coll;
+
+        // Teleporters
+        coll = CheckCollisionTag("Teleporter");
+        if (coll != null)
+        {
+
+            // Clear the movement queue, keep inputs tho
+            pointMover.ClearPoints();
+
+            // teleport
+            Vector3 targetPos = coll.GetComponent<Teleporter>().targetPos;
+            transform.position = targetPos;
+
+            Debug.Log("TP to " + targetPos);
+        }
+
+        // Pellets
+        coll = CheckCollisionTag("Pellet");
+        if (coll != null)
+        {
+            Destroy(coll.gameObject);
+            gameManager.AddScore(10);
+        }
+
+        // Bonus Cherry
+        coll = CheckCollisionTag("Cherry");
+        if (coll != null)
+        {
+            Destroy(coll.gameObject);
+            gameManager.AddScore(100);
+        }
+    }
+
+    Collider2D CheckCollisionTag(string tag)
+    {
+        foreach (Collider2D coll in collArray)
+        {
+            if (coll != null && coll.tag == tag)
+            {
+                return coll;
+            }
+        }
+        return null;
     }
 }
