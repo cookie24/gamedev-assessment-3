@@ -40,7 +40,7 @@ public class MazeMovement : MonoBehaviour
             }
             else
             {
-                // Hit a wall LOL (stop moving)
+                // Hit a wall LOL (not moving)
             }
         }
     }
@@ -48,7 +48,7 @@ public class MazeMovement : MonoBehaviour
     public bool CollisionInDirection(Dir dir, string tag)
     {
         Vector2 checkPos = GetPosInDirection(dir);
-        Collider2D collision = Physics2D.OverlapCircle(checkPos, 0.4f);
+        Collider2D collision = Physics2D.OverlapCircle(checkPos, 0.45f);
         if (collision != null && collision.tag == tag)
         {
             return true;
@@ -59,22 +59,6 @@ public class MazeMovement : MonoBehaviour
 
     private Vector3 GetPosInDirection(Dir dir)
     {
-        return transform.position + GetDirectionVector3(dir);
-    }
-
-    private Vector3 GetDirectionVector3(Dir dir)
-    {
-        switch (dir) {
-            case Dir.E:
-                return Vector3.right;
-            case Dir.N:
-                return Vector3.up;
-            case Dir.W:
-                return Vector3.left;
-            case Dir.S:
-                return Vector3.down;
-            default:
-                return Vector3.zero;
-        }
+        return transform.position + Direction.GetDirectionVector3(dir);
     }
 }

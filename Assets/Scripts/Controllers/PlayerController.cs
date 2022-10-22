@@ -10,9 +10,13 @@ public class PlayerController : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField] private AudioClip moveSoundPelletless;
     [SerializeField] private AudioClip moveSoundPellet;
+    [SerializeField] private AudioClip moveSoundStop;
     private AudioClip currentFootstepAudio;
 
-    private ParticleSystem partSys;
+    [SerializeField] private ParticleSystem partSysMove;
+    [SerializeField] private GameObject partSysStopObj;
+
+    private bool stoppedThisFrame = true;
 
 
     // Start is called before the first frame update
@@ -21,7 +25,6 @@ public class PlayerController : MonoBehaviour
         mazeMover = GetComponent<MazeMovement>();
         pointMover = GetComponent<PointMovement>();
         audioSource = GetComponent<AudioSource>();
-        partSys = GetComponent<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -60,6 +63,8 @@ public class PlayerController : MonoBehaviour
         // footstep audio checking
         if (pointMover.IsMoving())
         {
+            stoppedThisFrame = false;
+
             // Determine which footstep audio we should play
             if (mazeMover.CollisionInDirection(mazeMover.currentInput, "Pellet") || mazeMover.CollisionInDirection(Dir.None, "Pellet"))
             {
@@ -73,15 +78,25 @@ public class PlayerController : MonoBehaviour
             // play the audio (if it isn't already)
             if (!audioSource.isPlaying && currentFootstepAudio != null)
             {
-                audioSource.clip = currentFootstepAudio;
-                audioSource.loop = false;
-                audioSource.Play();
+                PlayAudioClip(currentFootstepAudio);
             }
         }
         else
         {
-            audioSource.Stop();
+            if (!stoppedThisFrame)
+            {
+                Debug.Log("BOOF");
+                audioSource.Stop();
+                PlayAudioClip(moveSoundStop);
+            }
         }
+    }
+
+    void PlayAudioClip(AudioClip ac)
+    {
+        audioSource.clip = ac;
+        audioSource.loop = false;
+        audioSource.Play();
     }
 
     void PlayParticles()
@@ -89,18 +104,22 @@ public class PlayerController : MonoBehaviour
         // footsteps
         if (pointMover.IsMoving())
         {
-            if (!partSys.isPlaying)
+            if (!partSysMove.isPlaying)
             {
-                Debug.Log("Playing");
-                partSys.Play();
+                partSysMove.Play();
             }
         }
         else
         {
-            if (partSys.isPlaying)
+            if (partSysMove.isPlaying)
             {
-                Debug.Log("Stopping");
-                partSys.Stop();
+                partSysMove.Stop();
+            }
+            if (!stoppedThisFrame)
+            {
+                Instantiate(partSysStopObj, transform.position + Direction.GetDirectionVector3(mazeMover.currentInput), Quaternion.identity)
+                    .GetComponent<ParticleSystem>().Play();
+                stoppedThisFrame = true;
             }
         }
     }

@@ -39,6 +39,7 @@ public class PointMovement : MonoBehaviour
             if (Vector3.Equals(transform.position, activePoint))
             {
                 RemovePoint(activePoint);
+
             }
         }
 
