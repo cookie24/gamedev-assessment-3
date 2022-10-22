@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioClip moveSoundStop;
     private AudioClip currentFootstepAudio;
 
+    private Animator animator;
+
     [SerializeField] private ParticleSystem partSysMove;
     [SerializeField] private GameObject partSysStopObj;
 
@@ -23,6 +25,7 @@ public class PlayerController : MonoBehaviour
     new private Collider2D collider;
     ContactFilter2D collFilter = new ContactFilter2D();
 
+    private Vector3 spawnPoint;
 
     // Start is called before the first frame update
     void Start()
@@ -31,38 +34,46 @@ public class PlayerController : MonoBehaviour
         pointMover = GetComponent<PointMovement>();
         audioSource = GetComponent<AudioSource>();
         collider = GetComponent<Collider2D>();
+        animator = GetComponent<Animator>();
+        spawnPoint = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        GetInput();
-        PlayFootsteps();
-        PlayParticles();
-        CheckCollisions();
+        if (gameManager.GetGameState() != GameManager.GameState.Paused &&
+            gameManager.GetGameState() != GameManager.GameState.Dead)
+        {
+            GetInput();
+            PlayFootsteps();
+            PlayParticles();
+            CheckCollisions();
+        }
     }
 
     void GetInput()
     {
+        
         if (Input.GetKeyDown(KeyCode.D))
-        {
-            mazeMover.lastInput = Dir.E;
-        }
-        else
+            {
+                mazeMover.lastInput = Dir.E;
+            }
+            else
         if (Input.GetKeyDown(KeyCode.W))
-        {
-            mazeMover.lastInput = Dir.N;
-        }
-        else
+            {
+                mazeMover.lastInput = Dir.N;
+            }
+            else
         if (Input.GetKeyDown(KeyCode.A))
-        {
-            mazeMover.lastInput = Dir.W;
-        }
-        else
+            {
+                mazeMover.lastInput = Dir.W;
+            }
+            else
         if (Input.GetKeyDown(KeyCode.S))
-        {
-            mazeMover.lastInput = Dir.S;
-        }
+            {
+                mazeMover.lastInput = Dir.S;
+            }
+        
     }
 
     void PlayFootsteps()
@@ -73,8 +84,8 @@ public class PlayerController : MonoBehaviour
             stoppedThisFrame = false;
 
             // Determine which footstep audio we should play
-            if (mazeMover.CollisionInDirection(mazeMover.currentInput, "Pellet", 0.8f) ||
-                mazeMover.CollisionInDirection(Dir.None, "Pellet", 0.8f) )
+            if (mazeMover.CollisionInDirection(mazeMover.currentInput, "Pellet", 0.6f) ||
+                mazeMover.CollisionInDirection(Dir.None, "Pellet", 0.5f) )
             {
                 currentFootstepAudio = moveSoundPellet;
             }
@@ -169,6 +180,33 @@ public class PlayerController : MonoBehaviour
             Destroy(coll.gameObject);
             gameManager.AddScore(100);
         }
+
+        // Power Pellet
+        coll = CheckCollisionTag("Power Pellet");
+        if (coll != null)
+        {
+            Destroy(coll.gameObject);
+            gameManager.StartScaredState();
+        }
+
+        // Ghosts
+        coll = CheckCollisionTag("Enemy");
+        if (coll != null)
+        {
+            if (gameManager.GetGameState() == GameManager.GameState.Scared)
+            {
+                // Scared enemy code
+            }
+            else
+            {
+                // Death code
+
+                Debug.Log("Ghost Death");
+                gameManager.StartDeathState();
+                animator.SetTrigger("Dead");
+                partSysMove.Stop();
+            }
+        }
     }
 
     Collider2D CheckCollisionTag(string tag)
@@ -181,5 +219,13 @@ public class PlayerController : MonoBehaviour
             }
         }
         return null;
+    }
+
+    public void Respawn()
+    {
+        transform.position = spawnPoint;
+        pointMover.ClearPoints();
+        mazeMover.ClearInput();
+        animator.SetTrigger("Respawn");
     }
 }

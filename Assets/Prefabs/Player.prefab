@@ -221,6 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b680e23cd27dd4d4191258e5fe6ae521, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 0}
   moveSoundPelletless: {fileID: 8300000, guid: 43cf0e7d1a65e734fa9e9f3038b04c7c, type: 3}
   moveSoundPellet: {fileID: 8300000, guid: ea3cb744460d0364e9b6065b5b65ac4b, type: 3}
   moveSoundStop: {fileID: 8300000, guid: 8c8ff990fa622f5448b21d5704ca953c, type: 3}
@@ -290,7 +291,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.2, y: 0}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -301,7 +302,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.8, y: 1}
   m_EdgeRadius: 0
 --- !u!1001 &5041875069410138831
 PrefabInstance:

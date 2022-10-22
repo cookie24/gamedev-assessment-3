@@ -7,6 +7,7 @@ public class PointMovement : MonoBehaviour
 
     public List<Vector3> pointList = new List<Vector3>();
     private Animator animator;
+    public GameManager gameManager;
 
     public float moveSpeed;
     private float moveSpeedAnim = 0;
@@ -23,7 +24,8 @@ public class PointMovement : MonoBehaviour
         moveSpeedAnim = 0;
 
         // Move our lil object if there is a destination for him to go
-        if (IsMoving())
+        if (IsMoving() && gameManager.GetGameState() != GameManager.GameState.Paused &&
+                          gameManager.GetGameState() != GameManager.GameState.Dead)
         {
             Vector3 activePoint = pointList[0];
             moveSpeedAnim = moveSpeed;

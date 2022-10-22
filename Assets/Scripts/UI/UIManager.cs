@@ -20,5 +20,14 @@ public class UIManager : MonoBehaviour
     void Update()
     {
         scoreText.text = "Score: " + gameManager.GetScore();
+
+        if (gameManager.GetScaredTimer() > 0)
+        {
+            scaredTimerText.text = Mathf.Ceil(gameManager.GetScaredTimer()).ToString();
+        }
+        else
+        {
+            scaredTimerText.text = "";
+        }
     }
 }

@@ -63,4 +63,10 @@ public class MazeMovement : MonoBehaviour
     {
         return transform.position + (Direction.GetDirectionVector3(dir));
     }
+
+    public void ClearInput()
+    {
+        lastInput = Dir.None;
+        currentInput = Dir.None;
+    }
 }

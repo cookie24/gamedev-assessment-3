@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
+    private GameManager gameManager;
 
     [SerializeField] private AudioClip introMusic;
     [SerializeField] private AudioClip normalMusic;
@@ -19,6 +20,7 @@ public class MusicManager : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        gameManager = GetComponent<GameManager>();
     }
 
     // Update is called once per frame
@@ -33,19 +35,10 @@ public class MusicManager : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            // Change music in certain intervals (debug)
-            if (timer >= intTimer)
+            // Change music based on game state
+            if (gameManager.GetGameState() == GameManager.GameState.Scared)
             {
-                if (intTimer == 10)
-                {
-                    SwapClip(deadMusic, true);
-                }
-                else if (intTimer == 15)
-                {
-                    SwapClip(scaredMusic, true);
-                }
-
-                intTimer += 1;
+                SwapClip(scaredMusic, true);
             }
         }
 
@@ -54,10 +47,14 @@ public class MusicManager : MonoBehaviour
 
     // Changes the current audio clip, AND sets it to the same time.
     void SwapClip(AudioClip clip, bool isLoop) {
-        float time = audioSource.time;
-        SetClip(clip, isLoop);
-        if (clip.length >= time) {
-            audioSource.time = time;
+        if (audioSource.clip != clip)
+        {
+            float time = audioSource.time;
+            SetClip(clip, isLoop);
+            if (clip.length >= time)
+            {
+                audioSource.time = time;
+            }
         }
     }
 
