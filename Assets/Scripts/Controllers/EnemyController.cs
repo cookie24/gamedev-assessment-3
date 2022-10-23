@@ -79,7 +79,7 @@ public class EnemyController : MonoBehaviour
             case MoveState.Dead:
                 if (!pointMover.IsMoving())
                 {
-                    moveState = MoveState.InSpawn;
+                    ExitDeadState();
                 }
                 break;
             case MoveState.InSpawn:
@@ -115,19 +115,18 @@ public class EnemyController : MonoBehaviour
             currentMoveType = prefMoveType;
         }
 
+        float distance;
+        Dir input = Dir.None;
+
         switch (currentMoveType)
         {
             // Type 1: Furthest distance from player (run away)
             case MoveType.Type1:
-                float distance = 0f;
-                Dir input = Dir.None;
+                distance = 0f;
                 foreach (Dir dir in directionList)
                 {
                     float checkDist = Vector3.Distance(mazeMover.GetPosInDirection(dir), player.transform.position);
-                    if (checkDist > distance &&
-                        Direction.GetOppositeDirection(mazeMover.currentInput) != dir &&
-                        !mazeMover.CollisionInDirection(dir, "Wall", 0.45f) &&
-                        !mazeMover.CollisionInDirection(dir, "Ghost Wall", 0.45f))
+                    if (checkDist >= distance && isValidInput(dir))
                     {
                         input = dir;
                         distance = checkDist;
@@ -135,8 +134,47 @@ public class EnemyController : MonoBehaviour
                 }
                 mazeMover.lastInput = input;
                 break;
+
+            // Type 2: Closest distance to player (hunter)
+            case MoveType.Type2:
+                distance = 9999f;
+                foreach (Dir dir in directionList)
+                {
+                    float checkDist = Vector3.Distance(mazeMover.GetPosInDirection(dir), player.transform.position);
+                    if (checkDist <= distance && isValidInput(dir))
+                    {
+                        input = dir;
+                        distance = checkDist;
+                    }
+                }
+                mazeMover.lastInput = input;
+                break;
+
+            // Type 3: Random valid direction
+            case MoveType.Type3:
+                List<Dir> validDirs = new List<Dir>();
+                foreach (Dir dir in directionList)
+                {
+                    if (isValidInput(dir))
+                    {
+                        validDirs.Add(dir);
+                    }
+                }
+                if (validDirs.Count > 0)
+                {
+                    // Only give an input if there's a valid one. Otherwise, do nothing.
+                    mazeMover.lastInput = validDirs[Random.Range(0, validDirs.Count - 1)];
+                }
+                break;
         }
 
+    }
+
+    private bool isValidInput(Dir dir)
+    {
+        return Direction.GetOppositeDirection(mazeMover.currentInput) != dir &&
+               !mazeMover.CollisionInDirection(dir, "Wall", 0.45f) &&
+               !mazeMover.CollisionInDirection(dir, "Ghost Wall", 0.45f);
     }
 
     private void Respawn()
@@ -161,12 +199,17 @@ public class EnemyController : MonoBehaviour
     {
         isDead = true;
         isRecovering = false;
+        pointMover.ClearPoints();
+        pointMover.AddPoint(spawnPos);
+        moveState = MoveState.Dead;
     }
 
     public void ExitDeadState()
     {
         isDead = false;
         isRecovering = false;
+        pointMover.pointList = exitPath;
+        moveState = MoveState.InSpawn;
     }
 
     public bool GetDeadState()

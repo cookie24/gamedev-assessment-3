@@ -64,6 +64,22 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 96ad175188a669f45859fd8520886415, type: 2}
+    - target: {fileID: 4073618413825180573, guid: 7f16ddf1f70fe9e408cff320068bf813, type: 3}
+      propertyPath: exitPath.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073618413825180573, guid: 7f16ddf1f70fe9e408cff320068bf813, type: 3}
+      propertyPath: exitPath.Array.data[0].y
+      value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073618413825180573, guid: 7f16ddf1f70fe9e408cff320068bf813, type: 3}
+      propertyPath: exitPath.Array.data[1].x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073618413825180573, guid: 7f16ddf1f70fe9e408cff320068bf813, type: 3}
+      propertyPath: exitPath.Array.data[1].y
+      value: -3
+      objectReference: {fileID: 0}
     - target: {fileID: 8938129521237883372, guid: 7f16ddf1f70fe9e408cff320068bf813, type: 3}
       propertyPath: m_text
       value: 4
