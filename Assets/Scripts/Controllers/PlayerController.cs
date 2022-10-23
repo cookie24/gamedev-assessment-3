@@ -171,8 +171,18 @@ public class PlayerController : MonoBehaviour
         coll = CheckCollisionTag("Pellet");
         if (coll != null)
         {
+            gameManager.pellets.Remove(coll.gameObject);
             Destroy(coll.gameObject);
             gameManager.AddScore(10);
+        }
+
+        // Power Pellet
+        coll = CheckCollisionTag("Power Pellet");
+        if (coll != null)
+        {
+            gameManager.pellets.Remove(coll.gameObject);
+            Destroy(coll.gameObject);
+            gameManager.StartScaredState();
         }
 
         // Bonus Cherry
@@ -181,14 +191,6 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(coll.gameObject);
             gameManager.AddScore(100);
-        }
-
-        // Power Pellet
-        coll = CheckCollisionTag("Power Pellet");
-        if (coll != null)
-        {
-            Destroy(coll.gameObject);
-            gameManager.StartScaredState();
         }
 
         // Ghosts

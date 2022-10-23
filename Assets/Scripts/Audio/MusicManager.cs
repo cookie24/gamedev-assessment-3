@@ -32,7 +32,6 @@ public class MusicManager : MonoBehaviour
         }
         else
         {
-
             // Change music based on game state
             if (gameManager.GetGameState() == GameManager.GameState.Scared)
             {
@@ -42,7 +41,7 @@ public class MusicManager : MonoBehaviour
             {
                 SwapClip(deadMusic, true);
             }
-            else if (audioSource.clip == scaredMusic)
+            else if (audioSource.clip == scaredMusic || audioSource.clip == deadMusic)
             {
                 SwapClip(normalMusic, true);
             }

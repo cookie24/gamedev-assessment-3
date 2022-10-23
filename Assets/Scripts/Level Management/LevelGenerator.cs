@@ -39,6 +39,7 @@ public class LevelGenerator : MonoBehaviour
     [SerializeField] private GameObject manualMap;
 
     [SerializeField] private LevelManager levelManager;
+    [SerializeField] private GameManager gameManager;
 
 
 
@@ -189,7 +190,13 @@ public class LevelGenerator : MonoBehaviour
                         }
                     }
 
-                    Instantiate(GetPrefabFromKey(key), new Vector3(startX + x, startY - y, posOffset.z), rot, transform);
+                    GameObject obj = Instantiate(GetPrefabFromKey(key), new Vector3(startX + x, startY - y, posOffset.z), rot, transform);
+                    
+                    // Add to pellet list
+                    if (levelManager.IsPellet(key))
+                    {
+                        gameManager.pellets.Add(obj);
+                    }
                 }
             }
         }

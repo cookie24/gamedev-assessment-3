@@ -288,11 +288,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4034023655701375380, guid: 7f16ddf1f70fe9e408cff320068bf813, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -9
       objectReference: {fileID: 0}
     - target: {fileID: 4034023655701375380, guid: 7f16ddf1f70fe9e408cff320068bf813, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 4034023655701375380, guid: 7f16ddf1f70fe9e408cff320068bf813, type: 3}
       propertyPath: m_LocalPosition.z
@@ -654,7 +654,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1863350808}
+      - m_Target: {fileID: 1863350816}
         m_TargetAssemblyTypeName: SceneLoader, Assembly-CSharp
         m_MethodName: LoadScene
         m_Mode: 5
@@ -1122,7 +1122,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1439132886
 MonoBehaviour:
@@ -1275,6 +1275,7 @@ MonoBehaviour:
   posOffset: {x: 0, y: -0.5, z: 0.5}
   manualMap: {fileID: 372585662}
   levelManager: {fileID: 1863350812}
+  gameManager: {fileID: 1863350814}
 --- !u!1 &1585534696
 GameObject:
   m_ObjectHideFlags: 0
@@ -1372,8 +1373,8 @@ RectTransform:
   - {fileID: 497821703}
   - {fileID: 1984601467}
   - {fileID: 1855206297}
-  - {fileID: 562794785}
   - {fileID: 1439132885}
+  - {fileID: 562794785}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -8424,7 +8425,7 @@ GameObject:
   - component: {fileID: 1863350812}
   - component: {fileID: 1863350813}
   - component: {fileID: 1863350815}
-  - component: {fileID: 1863350808}
+  - component: {fileID: 1863350816}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -8432,18 +8433,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1863350808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1863350807}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 422851093bd07e345b97b490e6caac9f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1863350809
 Transform:
   m_ObjectHideFlags: 0
@@ -8624,10 +8613,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 457ccf1a093b4f64497865721928edfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  deathTimer: 0
+  levelName: Level1
   player: {fileID: 543709574}
   enemies:
   - {fileID: 613124527}
+  pellets: []
 --- !u!114 &1863350815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8644,6 +8634,18 @@ MonoBehaviour:
   gameTimerText: {fileID: 1984601468}
   scaredTimerText: {fileID: 1855206298}
   centreText: {fileID: 1439132886}
+--- !u!114 &1863350816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1863350807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 422851093bd07e345b97b490e6caac9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &1929190998 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3962928764919121956, guid: 01aabd902973123498eae541836f647c, type: 3}

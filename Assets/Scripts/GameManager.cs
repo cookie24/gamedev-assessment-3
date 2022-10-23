@@ -10,29 +10,41 @@ public class GameManager : MonoBehaviour
         Normal,
         Scared,
         Recovering,
-        Dead
+        Dead,
     }
 
+    public string levelName = "Level1";
     private float introTimer = 4f;
     private float gameTimer = 0f;
     private float scaredTimer = 0f;
-    public float deathTimer = 0f;
+    private float deathTimer = 0f;
+    private float endTimer = 0f;
     private int score;
     private int lives = 3;
     private GameState gameState = GameState.Paused;
 
+    private SceneLoader sceneLoader;
+
     public PlayerController player;
     public List<EnemyController> enemies;
+    public List<GameObject> pellets = new List<GameObject>();
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        sceneLoader = GetComponent<SceneLoader>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Game Timer
+        if (gameState != GameState.Paused)
+        {
+            gameTimer += Time.deltaTime;
+        }
+
+        // Intro
         if (introTimer > 0f)
         {
             introTimer -= Time.deltaTime;
@@ -42,9 +54,28 @@ public class GameManager : MonoBehaviour
                 gameState = GameState.Normal;
             }
         }
+
+        // Game over
+        if (endTimer > 0f)
+        {
+            endTimer -= Time.deltaTime;
+            if (endTimer <= 0f)
+            {
+                // Save and leave
+                if (score > PlayerPrefs.GetInt(levelName + "Score", 0) ||
+                    (score == PlayerPrefs.GetInt(levelName + "Score", 0) &&
+                    gameTimer > PlayerPrefs.GetFloat(levelName + "Time", 0)))
+                {
+                    PlayerPrefs.SetInt(levelName + "Score", score);
+                    PlayerPrefs.SetFloat(levelName + "Time", gameTimer);
+                }
+                sceneLoader.LoadScene("StartScene");
+            }
+        }
+
+        // Normal gameplay
         if (gameState != GameState.Paused && gameState != GameState.Dead)
         {
-            gameTimer += Time.deltaTime;
 
             scaredTimer -= Time.deltaTime;
             if (scaredTimer <= 0f)
@@ -56,17 +87,31 @@ public class GameManager : MonoBehaviour
                 EndScaredState();
             }
 
+            if (pellets.Count <= 0)
+            {
+                TriggerGameOver();
+            }
+
         }
         else
         {
+            // Dead state
             if (gameState == GameState.Dead)
             {
                 deathTimer -= Time.deltaTime;
                 if (deathTimer <= 0f)
                 {
-                    // respawn code
-                    player.Respawn();
-                    gameState = GameState.Normal;
+                    if (lives <= 0)
+                    {
+                        // Game over
+                        TriggerGameOver();
+                    }
+                    else
+                    {
+                        // respawn
+                        player.Respawn();
+                        gameState = GameState.Normal;
+                    }
                 }
             }
         }
@@ -85,6 +130,11 @@ public class GameManager : MonoBehaviour
     public float GetIntroTimer()
     {
         return introTimer;
+    }
+
+    public float GetEndTimer()
+    {
+        return endTimer;
     }
 
     public void AddScore(int i)
@@ -130,6 +180,12 @@ public class GameManager : MonoBehaviour
         gameState = GameState.Dead;
         deathTimer = 4f;
         lives -= 1;
+    }
+
+    public void TriggerGameOver()
+    {
+        endTimer = 3f;
+        gameState = GameState.Paused;
     }
 
     public int GetLives()
