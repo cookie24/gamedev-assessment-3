@@ -13,11 +13,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioClip moveSoundPelletless;
     [SerializeField] private AudioClip moveSoundPellet;
     [SerializeField] private AudioClip moveSoundStop;
+    [SerializeField] private AudioClip moveSoundDeath;
     private AudioClip currentFootstepAudio;
 
     private Animator animator;
 
     [SerializeField] private ParticleSystem partSysMove;
+    [SerializeField] private ParticleSystem partSysDeath;
     [SerializeField] private GameObject partSysStopObj;
 
     private bool stoppedThisFrame = true;
@@ -193,18 +195,30 @@ public class PlayerController : MonoBehaviour
         coll = CheckCollisionTag("Enemy");
         if (coll != null)
         {
+            EnemyController ec = coll.GetComponent<EnemyController>();
             if (gameManager.GetGameState() == GameManager.GameState.Scared)
             {
                 // Scared enemy code
+                if (!ec.GetDeadState())
+                {
+                    ec.EnterDeadState();
+                    gameManager.AddScore(300);
+                }
             }
-            else
+            else if (!ec.GetDeadState())
             {
                 // Death code
 
-                Debug.Log("Ghost Death");
+                Debug.Log("Player Death");
+
                 gameManager.StartDeathState();
                 animator.SetTrigger("Dead");
+
                 partSysMove.Stop();
+                partSysDeath.Play();
+
+                audioSource.Stop();
+                PlayAudioClip(moveSoundDeath);
             }
         }
     }

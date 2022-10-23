@@ -13,8 +13,6 @@ public class MusicManager : MonoBehaviour
 
     private AudioSource audioSource;
     private bool isIntro = true;
-    private float timer = 0;
-    private int intTimer = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -27,18 +25,26 @@ public class MusicManager : MonoBehaviour
     void Update()
     {
         // Start the music at the beginning of the game
-        if (isIntro && !audioSource.isPlaying)
+        if (isIntro && gameManager.GetGameState() != GameManager.GameState.Paused)
         {
             SetClip(normalMusic, true);
+            isIntro = false;
         }
         else
         {
-            timer += Time.deltaTime;
 
             // Change music based on game state
             if (gameManager.GetGameState() == GameManager.GameState.Scared)
             {
                 SwapClip(scaredMusic, true);
+            }
+            else if (gameManager.GetRegenState())
+            {
+                SwapClip(deadMusic, true);
+            }
+            else if (audioSource.clip == scaredMusic)
+            {
+                SwapClip(normalMusic, true);
             }
         }
 

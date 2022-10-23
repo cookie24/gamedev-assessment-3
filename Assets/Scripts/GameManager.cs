@@ -13,14 +13,16 @@ public class GameManager : MonoBehaviour
         Dead
     }
 
+    private float introTimer = 4f;
     private float gameTimer = 0f;
     private float scaredTimer = 0f;
     public float deathTimer = 0f;
     private int score;
     private int lives = 3;
-    private GameState gameState = GameState.Normal;
+    private GameState gameState = GameState.Paused;
 
     public PlayerController player;
+    public List<EnemyController> enemies;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +33,15 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (introTimer > 0f)
+        {
+            introTimer -= Time.deltaTime;
+            if (introTimer <= 0f)
+            {
+                // Game Start
+                gameState = GameState.Normal;
+            }
+        }
         if (gameState != GameState.Paused && gameState != GameState.Dead)
         {
             gameTimer += Time.deltaTime;
@@ -38,9 +49,13 @@ public class GameManager : MonoBehaviour
             scaredTimer -= Time.deltaTime;
             if (scaredTimer <= 0f)
             {
+                // End of scared state
+
                 scaredTimer = 0f;
                 gameState = GameState.Normal;
+                EndScaredState();
             }
+
         }
         else
         {
@@ -67,6 +82,11 @@ public class GameManager : MonoBehaviour
         return scaredTimer;
     }
 
+    public float GetIntroTimer()
+    {
+        return introTimer;
+    }
+
     public void AddScore(int i)
     {
         score += i;
@@ -81,6 +101,18 @@ public class GameManager : MonoBehaviour
     {
         gameState = GameState.Scared;
         scaredTimer = 10f;
+        foreach (EnemyController e in enemies)
+        {
+            e.EnterScaredState();
+        }
+    }
+
+    public void EndScaredState()
+    {
+        foreach (EnemyController e in enemies)
+        {
+            e.ExitScaredState();
+        }
     }
 
     public GameState GetGameState()
@@ -103,6 +135,18 @@ public class GameManager : MonoBehaviour
     public int GetLives()
     {
         return lives;
+    }
+
+    public bool GetRegenState()
+    {
+        foreach (EnemyController e in enemies)
+        {
+            if (e.GetDeadState())
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
