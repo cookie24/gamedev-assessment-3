@@ -31,5 +31,22 @@ public static class Direction
                 return Vector3.zero;
         }
     }
+
+    public static Dir GetOppositeDirection(Dir dir)
+    {
+        switch (dir)
+        {
+            case Dir.E:
+                return Dir.W;
+            case Dir.N:
+                return Dir.S;
+            case Dir.W:
+                return Dir.E;
+            case Dir.S:
+                return Dir.N;
+            default:
+                return Dir.None;
+        }
+    }
 }
 

@@ -59,7 +59,7 @@ public class MazeMovement : MonoBehaviour
         return false;
     }
 
-    private Vector3 GetPosInDirection(Dir dir)
+    public Vector3 GetPosInDirection(Dir dir)
     {
         return transform.position + (Direction.GetDirectionVector3(dir));
     }
