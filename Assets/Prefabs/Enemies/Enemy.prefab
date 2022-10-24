@@ -171,6 +171,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  player: {fileID: 0}
+  moveState: 1
+  prefMoveType: 0
   spawnPos: {x: 0.5, y: 0, z: 0}
   exitPath:
   - {x: 0.5, y: 3, z: 0}

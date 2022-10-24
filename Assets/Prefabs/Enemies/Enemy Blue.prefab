@@ -65,6 +65,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 9100000, guid: f6d747bd3cf2b74488f704bdc5fed3c4, type: 2}
     - target: {fileID: 4073618413825180573, guid: 7f16ddf1f70fe9e408cff320068bf813, type: 3}
+      propertyPath: spawnPos.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073618413825180573, guid: 7f16ddf1f70fe9e408cff320068bf813, type: 3}
+      propertyPath: spawnPos.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4073618413825180573, guid: 7f16ddf1f70fe9e408cff320068bf813, type: 3}
       propertyPath: prefMoveType
       value: 1
       objectReference: {fileID: 0}

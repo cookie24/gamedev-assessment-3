@@ -53,7 +53,7 @@ public class EnemyController : MonoBehaviour
         animator = GetComponent<Animator>();
 
         currentMoveType = prefMoveType;
-        pointMover.pointList = exitPath;
+        OverwritePointList(exitPath);
     }
 
     // Update is called once per frame
@@ -83,7 +83,7 @@ public class EnemyController : MonoBehaviour
                 }
                 break;
             case MoveState.InSpawn:
-                if (pointMover.pointList.Count <= 0)
+                if (!pointMover.IsMoving())
                 {
                     moveState = MoveState.Moving;
                 }
@@ -177,12 +177,6 @@ public class EnemyController : MonoBehaviour
                !mazeMover.CollisionInDirection(dir, "Ghost Wall", 0.45f);
     }
 
-    private void Respawn()
-    {
-        isDead = false;
-        isRecovering = false;
-    }
-
     public void EnterScaredState()
     {
         isScared = true;
@@ -208,12 +202,18 @@ public class EnemyController : MonoBehaviour
     {
         isDead = false;
         isRecovering = false;
-        pointMover.pointList = exitPath;
+        mazeMover.ClearInput();
+        OverwritePointList(exitPath);
         moveState = MoveState.InSpawn;
     }
 
     public bool GetDeadState()
     {
         return isDead;
+    }
+
+    public void OverwritePointList(List<Vector3> list)
+    {
+        pointMover.pointList = new List<Vector3>(exitPath);
     }
 }
