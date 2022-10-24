@@ -43,7 +43,9 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] private Vector3 spawnPos;
     [SerializeField] private List<Vector3> exitPath = new List<Vector3>();
-
+    [SerializeField] private List<Vector3> clockwisePath = new List<Vector3>();
+    [SerializeField] private List<Vector3> currentPath = new List<Vector3>();
+    private bool isOnPath = false;
 
     // Start is called before the first frame update
     void Start()
@@ -137,17 +139,7 @@ public class EnemyController : MonoBehaviour
 
             // Type 2: Closest distance to player (hunter)
             case MoveType.Type2:
-                distance = 9999f;
-                foreach (Dir dir in directionList)
-                {
-                    float checkDist = Vector3.Distance(mazeMover.GetPosInDirection(dir), player.transform.position);
-                    if (checkDist <= distance && isValidInput(dir))
-                    {
-                        input = dir;
-                        distance = checkDist;
-                    }
-                }
-                mazeMover.lastInput = input;
+                InputTowardsPoint(player.transform.position);
                 break;
 
             // Type 3: Random valid direction
@@ -166,8 +158,59 @@ public class EnemyController : MonoBehaviour
                     mazeMover.lastInput = validDirs[Random.Range(0, validDirs.Count - 1)];
                 }
                 break;
+            
+                // Type 4: Move clockwise around map
+            case MoveType.Type4:
+                // reset the path if it is empty
+                if (currentPath.Count <= 0)
+                {
+                    currentPath = new List<Vector3>(clockwisePath);
+                }
+
+                // check if we are on path + delete points
+                if (transform.position == currentPath[0])
+                {
+                    isOnPath = true;
+                    currentPath.RemoveAt(0);
+                }
+
+                // reset the path if it is empty
+                // yes this is here a second time to avoid a NullReferenceException
+                if (currentPath.Count <= 0)
+                {
+                    currentPath = new List<Vector3>(clockwisePath);
+                }
+
+                if (!isOnPath)
+                {
+                    InputTowardsPoint(currentPath[0]);
+
+                }
+                else
+                {
+                    Vector3 targetPoint = currentPath[0];
+                    InputTowardsPoint(targetPoint);
+                }
+
+                break;
         }
 
+    }
+
+    private void InputTowardsPoint(Vector3 point)
+    {
+        float distance = 9999f;
+        Dir input = Dir.None;
+        foreach (Dir dir in directionList)
+        {
+            float checkDist = Vector3.Distance(mazeMover.GetPosInDirection(dir), point);
+            if (checkDist <= distance && isValidInput(dir))
+            {
+                input = dir;
+                distance = checkDist;
+            }
+        }
+        mazeMover.lastInput = input;
     }
 
     private bool isValidInput(Dir dir)
@@ -181,6 +224,7 @@ public class EnemyController : MonoBehaviour
     {
         isScared = true;
         isRecovering = false;
+        isOnPath = false;
     }
 
     public void ExitScaredState()
@@ -196,6 +240,7 @@ public class EnemyController : MonoBehaviour
         pointMover.ClearPoints();
         pointMover.AddPoint(spawnPos);
         moveState = MoveState.Dead;
+        isOnPath = false;
     }
 
     public void ExitDeadState()
@@ -215,5 +260,22 @@ public class EnemyController : MonoBehaviour
     public void OverwritePointList(List<Vector3> list)
     {
         pointMover.pointList = new List<Vector3>(exitPath);
+    }
+
+    private Vector3 GetClosestPoint(List<Vector3> list)
+    {
+        Vector3 picked = list[0];
+        float dist = 9999f;
+        float newDist;
+        foreach (Vector3 point in list)
+        {
+            newDist = Vector3.Distance(transform.position, point);
+            if (newDist <= dist)
+            {
+                picked = point;
+                dist = newDist;
+            }
+        }
+        return picked;
     }
 }
