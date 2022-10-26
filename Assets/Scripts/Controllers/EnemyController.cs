@@ -9,6 +9,7 @@ public class EnemyController : MonoBehaviour
          Moving,
          InSpawn,
          Dead,
+         Shooting
     }
 
     enum MoveType
@@ -46,6 +47,10 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private List<Vector3> clockwisePath = new List<Vector3>();
     [SerializeField] private List<Vector3> currentPath = new List<Vector3>();
     private bool isOnPath = false;
+
+    [SerializeField] private bool isInnovation = false;
+    [SerializeField] private GameObject bulletPrefab;
+    private float shootTimer = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -96,10 +101,49 @@ public class EnemyController : MonoBehaviour
                 {
                     GetInput();
                     animator.speed = 1f;
+
+                    // Design Innovation shooting mechanic
+                    if (isInnovation && !isScared)
+                    {
+                        CheckToShoot();
+                    }
                 }
                 else
                 {
                     animator.speed = 0f;
+                }
+                break;
+            case MoveState.Shooting:
+                // Will only run in Level 2
+                if (isScared)
+                {
+                    moveState = MoveState.Moving;
+                }
+
+                shootTimer -= Time.deltaTime;
+                if (!pointMover.IsMoving())
+                {
+                    if (shootTimer <= 0f)
+                    {
+                        // Check if we should move instead of shooting
+                        if (!CheckToMove())
+                        {
+                            // Face the player
+                            Vector3 playerPos = player.transform.position;
+                            float angle = Mathf.Atan2(playerPos.y - transform.position.y, playerPos.x - transform.position.x) * Mathf.Rad2Deg;
+                            transform.rotation = Quaternion.Euler(0f, 0f, angle);
+
+                            // Shoot
+                            Instantiate(bulletPrefab,
+                                        transform.position,
+                                        transform.rotation)
+                                .GetComponent<BulletController>()
+                                .Setup(playerPos);
+
+                            // Start shooting/moving cooldown
+                            shootTimer = 0.8f;
+                        }
+                    }
                 }
                 break;
         }
@@ -165,6 +209,11 @@ public class EnemyController : MonoBehaviour
                 if (currentPath.Count <= 0)
                 {
                     currentPath = new List<Vector3>(clockwisePath);
+                    Vector3 point = GetClosestPoint(currentPath);
+                    while (currentPath[0] != point && currentPath.Count > 0)
+                    {
+                        currentPath.RemoveAt(0);
+                    }
                 }
 
                 // check if we are on path + delete points
@@ -277,5 +326,47 @@ public class EnemyController : MonoBehaviour
             }
         }
         return picked;
+    }
+
+    private bool CanShoot()
+    {
+        if (transform.position.x == player.transform.position.x ||
+            transform.position.y == player.transform.position.y)
+        {
+
+            if (Physics2D.Linecast(transform.position, player.transform.position, LayerMask.GetMask("Wall")))
+            {
+                return false;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    private void CheckToShoot()
+    {
+        if (CanShoot())
+        {
+            // enter shooting state
+            mazeMover.ClearInput();
+            moveState = MoveState.Shooting;
+        }
+    }
+
+    private bool CheckToMove()
+    {
+        if (!CanShoot())
+        {
+            // Return to normal state
+            moveState = MoveState.Moving;
+            return true;
+        }
+        return false;
+    }
+
+    private Vector3 GetDirectionToPlayer()
+    {
+        return (transform.position - player.transform.position).normalized;
     }
 }

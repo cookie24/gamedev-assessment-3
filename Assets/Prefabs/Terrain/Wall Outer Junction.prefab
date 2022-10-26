@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2368844074478661158}
   - component: {fileID: 2368844074478661157}
   - component: {fileID: 1822489068975574833}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall Outer Junction
   m_TagString: Wall
   m_Icon: {fileID: 0}

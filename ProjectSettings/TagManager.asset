@@ -3,15 +3,22 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Ghost Wall
+  - Wall
+  - Pellet
+  - Power Pellet
+  - Cherry
+  - Enemy
+  - Teleporter
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
-  - 
+  - Wall
   - 
   - 
   - 

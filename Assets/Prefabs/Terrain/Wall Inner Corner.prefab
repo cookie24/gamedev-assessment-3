@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1968547714324381565}
   - component: {fileID: 1968547714324381562}
   - component: {fileID: 2674760385489230610}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Wall Inner Corner
   m_TagString: Wall
   m_Icon: {fileID: 0}

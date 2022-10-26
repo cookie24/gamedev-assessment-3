@@ -177,6 +177,10 @@ MonoBehaviour:
   spawnPos: {x: 0.5, y: 0, z: 0}
   exitPath:
   - {x: 0.5, y: 3, z: 0}
+  clockwisePath: []
+  currentPath: []
+  isInnovation: 0
+  bulletPrefab: {fileID: 4049619129762162494, guid: 3399b37c4d0808741bea73533dcbcf1a, type: 3}
 --- !u!114 &8265169505786596919
 MonoBehaviour:
   m_ObjectHideFlags: 0

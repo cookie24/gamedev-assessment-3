@@ -39,6 +39,7 @@ Transform:
   - {fileID: 8955076987775686393}
   - {fileID: 1523451413621053668}
   - {fileID: 6580286237076498936}
+  - {fileID: 7153276886759667586}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -226,6 +227,7 @@ MonoBehaviour:
   moveSoundPelletless: {fileID: 8300000, guid: 43cf0e7d1a65e734fa9e9f3038b04c7c, type: 3}
   moveSoundPellet: {fileID: 8300000, guid: ea3cb744460d0364e9b6065b5b65ac4b, type: 3}
   moveSoundStop: {fileID: 8300000, guid: 8c8ff990fa622f5448b21d5704ca953c, type: 3}
+  moveSoundDeath: {fileID: 0}
   partSysMove: {fileID: 3380916194508424375}
   partSysDeath: {fileID: 0}
   partSysStopObj: {fileID: 4173078255537530117, guid: 789452a6b31130e4fa7767b330624ecf, type: 3}
@@ -307,6 +309,37 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.8, y: 1}
   m_EdgeRadius: 0
+--- !u!1 &7821511550784361291
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7153276886759667586}
+  m_Layer: 0
+  m_Name: Sword
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7153276886759667586
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7821511550784361291}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5275300788889734497}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &124563175771291993
 PrefabInstance:
   m_ObjectHideFlags: 0
