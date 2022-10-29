@@ -53,6 +53,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
     private float shootTimer = 0f;
     private float stunTimer = 0f;
+    [SerializeField] private GameObject stunEffectObj;
 
     // Start is called before the first frame update
     void Start()
@@ -149,11 +150,16 @@ public class EnemyController : MonoBehaviour
                 }
                 break;
             case MoveState.Stunned:
-                stunTimer -= Time.deltaTime;
-                if (stunTimer <= 0f)
+                if (gameManager.GetGameState() != GameManager.GameState.Paused &&
+                    gameManager.GetGameState() != GameManager.GameState.Dead)
                 {
-                    ExitStunnedState();
+                    stunTimer -= Time.deltaTime;
+                    if (stunTimer <= 0f)
+                    {
+                        ExitStunnedState();
+                    }
                 }
+
                 break;
         }
     }
@@ -299,6 +305,9 @@ public class EnemyController : MonoBehaviour
         pointMover.AddPoint(spawnPos);
         moveState = MoveState.Dead;
         isOnPath = false;
+
+        stunTimer = 0f;
+        stunEffectObj.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     public void ExitDeadState()
@@ -383,11 +392,13 @@ public class EnemyController : MonoBehaviour
     {
         moveState = MoveState.Stunned;
         stunTimer = 3f;
+        stunEffectObj.GetComponent<SpriteRenderer>().enabled = true;
     }
 
     public void ExitStunnedState()
     {
         moveState = MoveState.Moving;
+        stunEffectObj.GetComponent<SpriteRenderer>().enabled = false;
     }
 
     public bool IsStunned()

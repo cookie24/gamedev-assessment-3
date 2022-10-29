@@ -49,7 +49,11 @@ public class SwordController : MonoBehaviour
                     // Enemy
                     if (coll.tag == "Enemy")
                     {
-
+                        EnemyController ec = coll.GetComponent<EnemyController>();
+                        if (ec.IsStunned())
+                        {
+                            ec.EnterDeadState();
+                        }
                     }
 
                     // Bullet

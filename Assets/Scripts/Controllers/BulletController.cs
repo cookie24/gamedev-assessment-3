@@ -35,7 +35,9 @@ public class BulletController : MonoBehaviour
         {
             if (coll != null)
             {
-                if (coll.tag == "Wall" || (coll.gameObject != gameObject && coll.tag == "Bullet"))
+                if (coll.tag == "Wall" ||
+                    (coll.tag == "Bullet" && coll.gameObject != gameObject &&
+                    !isReflected && !coll.GetComponent<BulletController>().isReflected))
                 {
                     Destroy(coll.gameObject);
                     Destroy();
