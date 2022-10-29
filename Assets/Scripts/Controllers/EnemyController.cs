@@ -9,7 +9,8 @@ public class EnemyController : MonoBehaviour
          Moving,
          InSpawn,
          Dead,
-         Shooting
+         Shooting,
+         Stunned
     }
 
     enum MoveType
@@ -51,6 +52,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private bool isInnovation = false;
     [SerializeField] private GameObject bulletPrefab;
     private float shootTimer = 0f;
+    private float stunTimer = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -126,7 +128,7 @@ public class EnemyController : MonoBehaviour
                     if (shootTimer <= 0f)
                     {
                         // Check if we should move instead of shooting
-                        if (!CheckToMove())
+                        if (!CheckToMove() && gameManager.GetGameState() != GameManager.GameState.Dead)
                         {
                             // Face the player
                             Vector3 playerPos = player.transform.position;
@@ -144,6 +146,13 @@ public class EnemyController : MonoBehaviour
                             shootTimer = 0.8f;
                         }
                     }
+                }
+                break;
+            case MoveState.Stunned:
+                stunTimer -= Time.deltaTime;
+                if (stunTimer <= 0f)
+                {
+                    ExitStunnedState();
                 }
                 break;
         }
@@ -368,5 +377,21 @@ public class EnemyController : MonoBehaviour
     private Vector3 GetDirectionToPlayer()
     {
         return (transform.position - player.transform.position).normalized;
+    }
+
+    public void EnterStunnedState()
+    {
+        moveState = MoveState.Stunned;
+        stunTimer = 3f;
+    }
+
+    public void ExitStunnedState()
+    {
+        moveState = MoveState.Moving;
+    }
+
+    public bool IsStunned()
+    {
+        return stunTimer > 0f;
     }
 }

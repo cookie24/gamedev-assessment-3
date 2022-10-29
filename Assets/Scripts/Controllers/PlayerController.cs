@@ -217,19 +217,15 @@ public class PlayerController : MonoBehaviour
             }
             else if (!ec.GetDeadState())
             {
-                // Death code
-
-                Debug.Log("Player Death");
-
-                gameManager.StartDeathState();
-                animator.SetTrigger("Dead");
-
-                partSysMove.Stop();
-                partSysDeath.Play();
-
-                audioSource.Stop();
-                PlayAudioClip(moveSoundDeath);
+                Die();
             }
+        }
+
+        // Bullets
+        coll = CheckCollisionTag("Bullet");
+        if (coll != null)
+        {
+            Die();
         }
     }
 
@@ -251,5 +247,27 @@ public class PlayerController : MonoBehaviour
         pointMover.ClearPoints();
         mazeMover.ClearInput();
         animator.SetTrigger("Respawn");
+    }
+
+    public void Die()
+    {
+        // Death code
+
+        Debug.Log("Player Death");
+
+        gameManager.StartDeathState();
+        animator.SetTrigger("Dead");
+
+        partSysMove.Stop();
+        partSysDeath.Play();
+
+        audioSource.Stop();
+        PlayAudioClip(moveSoundDeath);
+
+        // despawn bullets
+        foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Bullet"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

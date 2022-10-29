@@ -163,6 +163,7 @@ public class GameManager : MonoBehaviour
         {
             e.ExitScaredState();
         }
+        scaredTimer = 0f;
     }
 
     public GameState GetGameState()
