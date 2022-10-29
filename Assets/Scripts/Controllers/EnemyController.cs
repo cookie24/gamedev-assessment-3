@@ -49,6 +49,11 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private List<Vector3> currentPath = new List<Vector3>();
     private bool isOnPath = false;
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip moveSoundShoot;
+    [SerializeField] private AudioClip moveSoundKill;
+    [SerializeField] private AudioClip moveSoundStun;
+
     [SerializeField] private bool isInnovation = false;
     [SerializeField] private GameObject bulletPrefab;
     private float shootTimer = 0f;
@@ -61,6 +66,7 @@ public class EnemyController : MonoBehaviour
         mazeMover = GetComponent<MazeMovement>();
         pointMover = GetComponent<PointMovement>();
         animator = GetComponent<Animator>();
+        audioSource = GetComponent<AudioSource>();
 
         currentMoveType = prefMoveType;
         OverwritePointList(exitPath);
@@ -145,6 +151,9 @@ public class EnemyController : MonoBehaviour
 
                             // Start shooting/moving cooldown
                             shootTimer = 0.8f;
+
+                            // SFX
+                            PlayAudioClip(audioSource, moveSoundShoot);
                         }
                     }
                 }
@@ -162,6 +171,13 @@ public class EnemyController : MonoBehaviour
 
                 break;
         }
+    }
+    void PlayAudioClip(AudioSource ads, AudioClip ac)
+    {
+        ads.Stop();
+        ads.clip = ac;
+        ads.loop = false;
+        ads.Play();
     }
 
     void GetInput()
@@ -308,6 +324,7 @@ public class EnemyController : MonoBehaviour
 
         stunTimer = 0f;
         stunEffectObj.GetComponent<SpriteRenderer>().enabled = false;
+        PlayAudioClip(audioSource, moveSoundKill);
     }
 
     public void ExitDeadState()
@@ -393,6 +410,8 @@ public class EnemyController : MonoBehaviour
         moveState = MoveState.Stunned;
         stunTimer = 3f;
         stunEffectObj.GetComponent<SpriteRenderer>().enabled = true;
+        gameManager.AddScore(100);
+        PlayAudioClip(audioSource, moveSoundStun);
     }
 
     public void ExitStunnedState()
@@ -401,7 +420,7 @@ public class EnemyController : MonoBehaviour
         stunEffectObj.GetComponent<SpriteRenderer>().enabled = false;
     }
 
-    public bool IsStunned()
+    public bool GetStunState()
     {
         return stunTimer > 0f;
     }

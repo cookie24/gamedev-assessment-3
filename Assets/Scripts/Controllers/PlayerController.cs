@@ -14,13 +14,18 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioClip moveSoundPellet;
     [SerializeField] private AudioClip moveSoundStop;
     [SerializeField] private AudioClip moveSoundDeath;
+    [SerializeField] private AudioClip moveSoundPower;
+    [SerializeField] private AudioClip moveSoundDash;
     private AudioClip currentFootstepAudio;
+
+    [SerializeField] private AudioSource audioSourceAlt;
 
     private Animator animator;
 
     [SerializeField] private ParticleSystem partSysMove;
     [SerializeField] private ParticleSystem partSysDeath;
-    [SerializeField] private GameObject partSysStopObj;
+    [SerializeField] private GameObject partSysStopPrefab;
+    [SerializeField] private GameObject partSysDashPrefab;
 
     private bool stoppedThisFrame = true;
     private Collider2D[] collArray = new Collider2D[2];
@@ -103,12 +108,14 @@ public class PlayerController : MonoBehaviour
             pointMover.ClearPoints();
 
             CheckCollisions();
+            Instantiate(partSysDashPrefab, transform.position + transform.forward, transform.rotation);
 
             // Move along every tile in direction, as long as there is no wall
             while (!mazeMover.CollisionInDirection(mazeMover.currentInput, "Wall", 0.45f))
             {
                 transform.position = mazeMover.GetPosInDirection(dir);
                 CheckCollisions();
+                Instantiate(partSysDashPrefab, transform.position + transform.forward, transform.rotation);
             }
 
             // Check if we should leave scared state
@@ -117,6 +124,9 @@ public class PlayerController : MonoBehaviour
             {
                 gameManager.EndScaredState();
             }
+
+            // SFX
+            PlayAudioClip(audioSourceAlt, moveSoundDash);
 
         }
     }
@@ -147,7 +157,7 @@ public class PlayerController : MonoBehaviour
             // play the audio (if it isn't already)
             if (!audioSource.isPlaying && currentFootstepAudio != null)
             {
-                PlayAudioClip(currentFootstepAudio);
+                PlayAudioClip(audioSource, currentFootstepAudio);
             }
         }
         else
@@ -156,16 +166,16 @@ public class PlayerController : MonoBehaviour
             {
                 Debug.Log("BOOF");
                 audioSource.Stop();
-                PlayAudioClip(moveSoundStop);
+                PlayAudioClip(audioSource, moveSoundStop);
             }
         }
     }
 
-    void PlayAudioClip(AudioClip ac)
+    void PlayAudioClip(AudioSource ads, AudioClip ac)
     {
-        audioSource.clip = ac;
-        audioSource.loop = false;
-        audioSource.Play();
+        ads.clip = ac;
+        ads.loop = false;
+        ads.Play();
     }
 
     void PlayParticles()
@@ -186,8 +196,7 @@ public class PlayerController : MonoBehaviour
             }
             if (!stoppedThisFrame)
             {
-                Instantiate(partSysStopObj, transform.position + Direction.GetDirectionVector3(mazeMover.currentInput), Quaternion.identity)
-                    .GetComponent<ParticleSystem>().Play();
+                Instantiate(partSysStopPrefab, transform.position + Direction.GetDirectionVector3(mazeMover.currentInput), Quaternion.identity);
                 stoppedThisFrame = true;
             }
         }
@@ -231,6 +240,7 @@ public class PlayerController : MonoBehaviour
             gameManager.pellets.Remove(coll.gameObject);
             Destroy(coll.gameObject);
             gameManager.StartScaredState();
+            PlayAudioClip(audioSourceAlt, moveSoundPower);
         }
 
         // Bonus Cherry
@@ -239,6 +249,7 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(coll.gameObject);
             gameManager.AddScore(100);
+            PlayAudioClip(audioSource, moveSoundPower);
         }
 
         // Ghosts
@@ -255,7 +266,7 @@ public class PlayerController : MonoBehaviour
                     gameManager.AddScore(300);
                 }
             }
-            else if (!ec.GetDeadState())
+            else if (!ec.GetDeadState() && !ec.GetStunState())
             {
                 Die();
             }
@@ -302,7 +313,7 @@ public class PlayerController : MonoBehaviour
         partSysDeath.Play();
 
         audioSource.Stop();
-        PlayAudioClip(moveSoundDeath);
+        PlayAudioClip(audioSource, moveSoundDeath);
 
         // despawn bullets
         foreach (GameObject gameObject in GameObject.FindGameObjectsWithTag("Bullet"))

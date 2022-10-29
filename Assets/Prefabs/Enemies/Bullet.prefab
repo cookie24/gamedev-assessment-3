@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8903764176899735107
 SpriteRenderer:
@@ -100,6 +100,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isReflected: 0
+  particleShoot: {fileID: 837505169188500014, guid: ea39d542fdc3b304396d193c429e7d2d, type: 3}
+  particleStop: {fileID: 4173078255537530117, guid: 789452a6b31130e4fa7767b330624ecf, type: 3}
 --- !u!61 &2578502854307633779
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -171,7 +173,7 @@ TrailRenderer:
   m_Time: 0.1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.1
+    widthMultiplier: 0.2
     widthCurve:
       serializedVersion: 2
       m_Curve:

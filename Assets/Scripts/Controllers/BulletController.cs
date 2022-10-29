@@ -4,16 +4,20 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
-    private float speed = 7f;
+    private float speed = 10f;
     public bool isReflected = false;
     private Vector3 dir = Vector3.zero;
     private Vector2 bounds = new Vector2(15f, 15f);
     private float lifetime = 0f;
 
+    [SerializeField] private GameObject particleShoot;
+    [SerializeField] private GameObject particleStop;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        transform.position += transform.right * 0.4f;
+        Instantiate(particleShoot, transform.position, transform.rotation);
     }
 
     // Update is called once per frame
@@ -35,23 +39,26 @@ public class BulletController : MonoBehaviour
         {
             if (coll != null)
             {
-                if (coll.tag == "Wall" ||
-                    (coll.tag == "Bullet" && coll.gameObject != gameObject &&
-                    !isReflected && !coll.GetComponent<BulletController>().isReflected))
+                if (coll.tag == "Wall")
+                {
+                    Die();
+                }
+                else if (coll.tag == "Bullet" && coll.gameObject != gameObject &&
+                    !isReflected && !coll.GetComponent<BulletController>().isReflected)
                 {
                     Destroy(coll.gameObject);
-                    Destroy();
+                    Die();
                 }
                 else if (coll.tag == "Enemy")
                 {
                     if (isReflected)
                     {
                         coll.GetComponent<EnemyController>().EnterStunnedState();
-                        Destroy();
+                        Die();
                     }
                     else if (lifetime >= 0.25f)
                     {
-                        Destroy();
+                        Die();
                     }
                 }
             }
@@ -59,8 +66,14 @@ public class BulletController : MonoBehaviour
         if (Mathf.Abs(transform.position.x) >= bounds.x ||
             Mathf.Abs(transform.position.y) >= bounds.y)
         {
-            Destroy();
+            Die();
         }
+    }
+
+    private void Die()
+    {
+        Instantiate(particleStop, transform.position, transform.rotation);
+        Destroy();
     }
 
     public void Setup(Vector3 targetPos)
@@ -68,10 +81,10 @@ public class BulletController : MonoBehaviour
         dir = (targetPos - transform.position).normalized;
     }
 
-    public void Reflect(Vector3 sourcePos)
+    public void Reflect()
     {
-        dir = (transform.position - sourcePos).normalized;
-        speed = 10f;
+        dir = -dir;
+        speed = 15f;
         isReflected = true;
         GetComponent<TrailRenderer>().endColor = Color.cyan;
     }

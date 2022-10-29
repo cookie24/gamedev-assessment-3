@@ -12,11 +12,18 @@ public class SwordController : MonoBehaviour
     new private Collider2D collider;
     ContactFilter2D collFilter = new ContactFilter2D();
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip moveSoundReflect;
+    [SerializeField] private AudioClip moveSoundSwing;
+
+    [SerializeField] private GameObject partSysReflectPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
         collider = GetComponent<Collider2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -38,6 +45,9 @@ public class SwordController : MonoBehaviour
                                                -transform.localScale.y,
                                                transform.localScale.z);
 
+            // SFX
+            PlayAudioClip(audioSource, moveSoundSwing);
+
             // Collisions
             Array.Clear(collArray, 0, collArray.Length);
             Physics2D.OverlapCollider(collider, collFilter.NoFilter(), collArray);
@@ -50,7 +60,7 @@ public class SwordController : MonoBehaviour
                     if (coll.tag == "Enemy")
                     {
                         EnemyController ec = coll.GetComponent<EnemyController>();
-                        if (ec.IsStunned())
+                        if (ec.GetStunState())
                         {
                             ec.EnterDeadState();
                         }
@@ -59,8 +69,10 @@ public class SwordController : MonoBehaviour
                     // Bullet
                     if (coll.tag == "Bullet")
                     {
-                        coll.gameObject.GetComponent<BulletController>().Reflect(transform.position);
+                        coll.gameObject.GetComponent<BulletController>().Reflect();
                         swingTimer = 0f;
+                        Instantiate(partSysReflectPrefab, transform.position, Quaternion.identity);
+                        PlayAudioClip(audioSource, moveSoundReflect);
                     }
                 }
             }
@@ -68,5 +80,13 @@ public class SwordController : MonoBehaviour
             // Cooldown
             swingTimer = 0.3f;
         }
+    }
+
+    void PlayAudioClip(AudioSource ads, AudioClip ac)
+    {
+        ads.Stop();
+        ads.clip = ac;
+        ads.loop = false;
+        ads.Play();
     }
 }
