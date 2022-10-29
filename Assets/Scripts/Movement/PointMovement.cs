@@ -78,4 +78,9 @@ public class PointMovement : MonoBehaviour
     {
         return pointList.Count != 0;
     }
+    public void SnapToCurrentPoint()
+    {
+        transform.position = pointList[0];
+        RemovePointAt(0);
+    }
 }

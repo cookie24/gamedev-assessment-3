@@ -24,13 +24,13 @@ public class PlayerController : MonoBehaviour
 
     private bool stoppedThisFrame = true;
     private Collider2D[] collArray = new Collider2D[2];
-    new private Collider2D collider;
-    ContactFilter2D collFilter = new ContactFilter2D();
 
     private Vector3 spawnPoint;
 
     [SerializeField] private bool isInnovation = false;
     [SerializeField] private SwordController swordController;
+
+    private int dashCount = 0;
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +38,6 @@ public class PlayerController : MonoBehaviour
         mazeMover = GetComponent<MazeMovement>();
         pointMover = GetComponent<PointMovement>();
         audioSource = GetComponent<AudioSource>();
-        collider = GetComponent<Collider2D>();
         animator = GetComponent<Animator>();
         spawnPoint = transform.position;
     }
@@ -82,8 +81,49 @@ public class PlayerController : MonoBehaviour
         // Swinging
         if (isInnovation && Input.GetKeyDown(KeyCode.Space))
         {
-            swordController.SwingSword();
+            if (gameManager.GetGameState() == GameManager.GameState.Scared)
+            {
+                // Dash
+                Dash(mazeMover.currentInput);
+            }
+            else
+            {
+                // Swing
+                swordController.SwingSword();
+            }
         }
+    }
+
+    void Dash(Dir dir)
+    {
+        if (dir != Dir.None && pointMover.IsMoving())
+        {
+            // Snap player to destination tile position if they are still moving
+            pointMover.SnapToCurrentPoint();
+            pointMover.ClearPoints();
+
+            CheckCollisions();
+
+            // Move along every tile in direction, as long as there is no wall
+            while (!mazeMover.CollisionInDirection(mazeMover.currentInput, "Wall", 0.45f))
+            {
+                transform.position = mazeMover.GetPosInDirection(dir);
+                CheckCollisions();
+            }
+
+            // Check if we should leave scared state
+            dashCount -= 1;
+            if (dashCount <= 0)
+            {
+                gameManager.EndScaredState();
+            }
+
+        }
+    }
+
+    public void RefillDashes()
+    {
+        dashCount = 3;
     }
 
     void PlayFootsteps()
@@ -157,7 +197,7 @@ public class PlayerController : MonoBehaviour
     {
         // Get collisions
         Array.Clear(collArray, 0, collArray.Length);
-        Physics2D.OverlapCollider(collider, collFilter.NoFilter(), collArray);
+        collArray = Physics2D.OverlapCircleAll(transform.position, 0.5f);
         Collider2D coll;
 
         // Teleporters

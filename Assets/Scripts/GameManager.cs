@@ -155,6 +155,7 @@ public class GameManager : MonoBehaviour
         {
             e.EnterScaredState();
         }
+        player.RefillDashes();
     }
 
     public void EndScaredState()
