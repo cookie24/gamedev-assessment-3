@@ -60,6 +60,8 @@ public class EnemyController : MonoBehaviour
     private float stunTimer = 0f;
     [SerializeField] private GameObject stunEffectObj;
 
+    [SerializeField] private GameObject partSysDeathPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -96,12 +98,23 @@ public class EnemyController : MonoBehaviour
                 if (!pointMover.IsMoving())
                 {
                     ExitDeadState();
+                    animator.speed = 0f;
                 }
                 break;
             case MoveState.InSpawn:
                 if (!pointMover.IsMoving())
                 {
                     moveState = MoveState.Moving;
+                }
+
+                if (gameManager.GetGameState() != GameManager.GameState.Paused &&
+                    gameManager.GetGameState() != GameManager.GameState.Dead)
+                {
+                    animator.speed = 1f;
+                }
+                else
+                {
+                    animator.speed = 0f;
                 }
                 break;
             case MoveState.Moving:
@@ -123,9 +136,10 @@ public class EnemyController : MonoBehaviour
                 }
                 break;
             case MoveState.Shooting:
-                // Will only run in Level 2
+                // Will only run in Level 2 / Innovation Scene
                 if (isScared)
                 {
+                    shootTimer = 0f;
                     moveState = MoveState.Moving;
                 }
 
@@ -135,7 +149,9 @@ public class EnemyController : MonoBehaviour
                     if (shootTimer <= 0f)
                     {
                         // Check if we should move instead of shooting
-                        if (!CheckToMove() && gameManager.GetGameState() != GameManager.GameState.Dead)
+                        if (!CheckToMove() &&
+                            gameManager.GetGameState() != GameManager.GameState.Paused &&
+                            gameManager.GetGameState() != GameManager.GameState.Dead)
                         {
                             // Face the player
                             Vector3 playerPos = player.transform.position;
@@ -156,6 +172,8 @@ public class EnemyController : MonoBehaviour
                             PlayAudioClip(audioSource, moveSoundShoot);
                         }
                     }
+
+                    animator.speed = 0f;
                 }
                 break;
             case MoveState.Stunned:
@@ -324,6 +342,7 @@ public class EnemyController : MonoBehaviour
 
         stunTimer = 0f;
         stunEffectObj.GetComponent<SpriteRenderer>().enabled = false;
+        Instantiate(partSysDeathPrefab, transform.position, transform.rotation);
         PlayAudioClip(audioSource, moveSoundKill);
     }
 
@@ -334,6 +353,7 @@ public class EnemyController : MonoBehaviour
         mazeMover.ClearInput();
         OverwritePointList(exitPath);
         moveState = MoveState.InSpawn;
+        shootTimer = 0f;
     }
 
     public bool GetDeadState()
@@ -418,6 +438,7 @@ public class EnemyController : MonoBehaviour
     {
         moveState = MoveState.Moving;
         stunEffectObj.GetComponent<SpriteRenderer>().enabled = false;
+        shootTimer = 0f;
     }
 
     public bool GetStunState()

@@ -49,7 +49,7 @@ public class BulletController : MonoBehaviour
                     Destroy(coll.gameObject);
                     Die();
                 }
-                else if (coll.tag == "Enemy")
+                else if (coll.tag == "Enemy" && !coll.GetComponent<EnemyController>().GetDeadState())
                 {
                     if (isReflected)
                     {

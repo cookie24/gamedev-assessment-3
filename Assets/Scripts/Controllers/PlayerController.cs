@@ -21,9 +21,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioSource audioSourceAlt;
 
     private Animator animator;
+    private SpriteRenderer spriteRenderer;
 
     [SerializeField] private ParticleSystem partSysMove;
     [SerializeField] private ParticleSystem partSysDeath;
+    [SerializeField] private ParticleSystem partSysFire;
     [SerializeField] private GameObject partSysStopPrefab;
     [SerializeField] private GameObject partSysDashPrefab;
 
@@ -35,7 +37,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool isInnovation = false;
     [SerializeField] private SwordController swordController;
 
-    private int dashCount = 0;
+    public int dashCount = 0;
+    public float invincibleTimer = 0f;
+
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +48,7 @@ public class PlayerController : MonoBehaviour
         pointMover = GetComponent<PointMovement>();
         audioSource = GetComponent<AudioSource>();
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         spawnPoint = transform.position;
     }
 
@@ -57,6 +62,7 @@ public class PlayerController : MonoBehaviour
             PlayFootsteps();
             PlayParticles();
             CheckCollisions();
+            CheckInvincibility();
         }
     }
 
@@ -136,6 +142,28 @@ public class PlayerController : MonoBehaviour
         dashCount = 3;
     }
 
+    void CheckInvincibility()
+    {
+        if (invincibleTimer > 0f)
+        {
+            invincibleTimer -= Time.deltaTime;
+            
+            if (invincibleTimer <= 0f)
+            {
+                spriteRenderer.enabled = true;
+            }
+            else
+            {
+                spriteRenderer.enabled = GetInvincibleBlinkState(invincibleTimer);
+            }
+        }
+    }
+
+    bool GetInvincibleBlinkState(float f)
+    {
+        return (f % 0.125f) >= 0.0625f;
+    }
+
     void PlayFootsteps()
     {
         // footstep audio checking
@@ -200,6 +228,22 @@ public class PlayerController : MonoBehaviour
                 stoppedThisFrame = true;
             }
         }
+
+        // fire
+        if (gameManager.GetGameState() == GameManager.GameState.Scared)
+        {
+            if (!partSysFire.isPlaying)
+            {
+                partSysFire.Play();
+            }
+        }
+        else
+        {
+            if (partSysFire.isPlaying)
+            {
+                partSysFire.Stop();
+            }
+        }
     }
 
     void CheckCollisions()
@@ -257,7 +301,7 @@ public class PlayerController : MonoBehaviour
         if (coll != null)
         {
             EnemyController ec = coll.GetComponent<EnemyController>();
-            if (gameManager.GetGameState() == GameManager.GameState.Scared)
+            if (gameManager.GetGameState() == GameManager.GameState.Scared || ec.GetStunState())
             {
                 // Scared enemy code
                 if (!ec.GetDeadState())
@@ -266,7 +310,7 @@ public class PlayerController : MonoBehaviour
                     gameManager.AddScore(300);
                 }
             }
-            else if (!ec.GetDeadState() && !ec.GetStunState())
+            else if (!ec.GetDeadState() && !IsInvincible())
             {
                 Die();
             }
@@ -274,7 +318,7 @@ public class PlayerController : MonoBehaviour
 
         // Bullets
         coll = CheckCollisionTag("Bullet");
-        if (coll != null)
+        if (coll != null && gameManager.GetGameState() != GameManager.GameState.Scared && !IsInvincible())
         {
             Die();
         }
@@ -298,6 +342,7 @@ public class PlayerController : MonoBehaviour
         pointMover.ClearPoints();
         mazeMover.ClearInput();
         animator.SetTrigger("Respawn");
+        invincibleTimer = 3f;
     }
 
     public void Die()
@@ -320,5 +365,10 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    public bool IsInvincible()
+    {
+        return invincibleTimer > 0f;
     }
 }
